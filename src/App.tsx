@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./index.css";
 import useStore from "./store/client/useStore";
 import { useAddPost } from "./store/server/features/posts/mutations";
@@ -13,6 +14,16 @@ export default function App() {
   const { data: getPostData } = useGetPost(counter);
 
   const addPost = useAddPost();
+
+  useEffect(() => {
+    const unsubscribe = useStore.subscribe((newState) => {
+      console.log("State changed:", newState);
+    });
+
+    return () => {
+      unsubscribe(); // Unsubscribe from state changes when component unmounts
+    };
+  }, []);
 
   return (
     <div className="App">
